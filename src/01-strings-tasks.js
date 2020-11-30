@@ -273,6 +273,7 @@ function encodeToRot13(str) {
  *   isString(new String('test')) => true
  */
 function isString(value) {
+  // Я внутренне протестую против второй проверки. Это неправильно!
   return typeof value === 'string' || value instanceof String;
 }
 
