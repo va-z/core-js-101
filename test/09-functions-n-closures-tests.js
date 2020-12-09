@@ -106,7 +106,7 @@ describe('09-functions-n-closures-tasks', () => {
       log,
       'cos(3.141592653589793) starts\n'
            + 'cos(3.141592653589793) ends\n',
-      'logger function shoud log the start and end of the specified function',
+      'logger function should log the start and end of the specified function',
     );
   });
 

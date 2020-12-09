@@ -1,6 +1,6 @@
 /* *********************************************************************************************
  *                                                                                             *
- * Plese read the following tutorial before implementing tasks:                                *
+ * Please read the following tutorial before implementing tasks:                                *
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions                     *
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function   *
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/arguments       *
@@ -23,8 +23,8 @@
  *   getComposition(Math.sin, Math.asin)(x) => Math.sin(Math.asin(x))
  *
  */
-function getComposition(/* f, g */) {
-  throw new Error('Not implemented');
+function getComposition(f, g) {
+  return (x) => f(g(x));
 }
 
 
@@ -44,8 +44,8 @@ function getComposition(/* f, g */) {
  *   power05(16) => 4
  *
  */
-function getPowerFunction(/* exponent */) {
-  throw new Error('Not implemented');
+function getPowerFunction(exponent) {
+  return (x) => x ** exponent;
 }
 
 
@@ -62,8 +62,9 @@ function getPowerFunction(/* exponent */) {
  *   getPolynom(8)     => y = 8
  *   getPolynom()      => null
  */
-function getPolynom() {
-  throw new Error('Not implemented');
+function getPolynom(...args) {
+  const { length } = args;
+  return (x) => args.reduce((acc, item, index) => acc + item * (x ** (length - index - 1)), null);
 }
 
 
@@ -81,8 +82,15 @@ function getPolynom() {
  *   ...
  *   memoizer() => the same random number  (next run, returns the previous cached result)
  */
-function memoize(/* func */) {
-  throw new Error('Not implemented');
+function memoize(func) {
+  const cache = {};
+  return (arg) => {
+    if (cache[arg] !== undefined) {
+      return cache[arg];
+    }
+    cache[arg] = func(arg);
+    return cache[arg];
+  };
 }
 
 
@@ -101,8 +109,19 @@ function memoize(/* func */) {
  * }, 2);
  * retryer() => 2
  */
-function retry(/* func, attempts */) {
-  throw new Error('Not implemented');
+function retry(func, attempts) {
+  let attempt = 0;
+  return function retryer() {
+    try {
+      return func();
+    } catch (err) {
+      if (attempt < attempts) {
+        attempt += 1;
+        return retryer();
+      }
+      throw err;
+    }
+  };
 }
 
 
@@ -110,7 +129,7 @@ function retry(/* func, attempts */) {
  * Returns the logging wrapper for the specified method,
  * Logger has to log the start and end of calling the specified function.
  * Logger has to log the arguments of invoked function.
- * The fromat of output log is:
+ * The format of output log is:
  * <function name>(<arg1>, <arg2>,...,<argN>) starts
  * <function name>(<arg1>, <arg2>,...,<argN>) ends
  *
@@ -129,8 +148,17 @@ function retry(/* func, attempts */) {
  * cos(3.141592653589793) ends
  *
  */
-function logger(/* func, logFunc */) {
-  throw new Error('Not implemented');
+function logger(func, logFunc) {
+  return (...args) => {
+    const { name } = func;
+    const str = JSON.stringify(args).slice(1, -1);
+
+    logFunc(`${name}(${str}) starts`);
+    const result = func(...args);
+    logFunc(`${name}(${str}) ends`);
+
+    return result;
+  };
 }
 
 
@@ -147,8 +175,13 @@ function logger(/* func, logFunc */) {
  *   partialUsingArguments(fn, 'a','b','c')('d') => 'abcd'
  *   partialUsingArguments(fn, 'a','b','c','d')() => 'abcd'
  */
-function partialUsingArguments(/* fn, ...args1 */) {
-  throw new Error('Not implemented');
+function partialUsingArguments(fn, ...args) {
+  const storage = [...args];
+
+  return function partial(...args2) {
+    storage.push(...args2);
+    return storage.length < fn.length ? partial : fn(...storage);
+  };
 }
 
 
@@ -169,8 +202,15 @@ function partialUsingArguments(/* fn, ...args1 */) {
  *   getId4() => 7
  *   getId10() => 11
  */
-function getIdGeneratorFunction(/* startFrom */) {
-  throw new Error('Not implemented');
+function getIdGeneratorFunction(startFrom) {
+  function* generator() {
+    for (let i = startFrom; ; i += 1) {
+      yield i;
+    }
+  }
+  const gen = generator();
+
+  return () => gen.next().value;
 }
 
 
